@@ -37,9 +37,10 @@ func main() {
 	digits += first
 	fmt.Println(digits)
 	iban.SetString(digits, 10)
-	if iban.Mod(&iban, big.NewInt(97)).Int64() != 1 {
-		fmt.Println("IBAN incorrect or input error")
-		os.Exit(97)
+	mod := iban.Mod(&iban, big.NewInt(97)).Int64()
+	if mod != 1 {
+		fmt.Println("IBAN incorrect or input error: ", 98-mod)
+		os.Exit(int(98-mod))
 	}
 	fmt.Println("IBAN probably correct")
 }
