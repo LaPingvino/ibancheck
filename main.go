@@ -27,6 +27,9 @@ func main() {
 	var iban big.Int
 	fmt.Print("Enter an IBAN number: ")
 	fmt.Scanln(&input)
+	prefix := input[0:2]
+	check := input[2:4]
+	bban := input[4:]
 	for i, c := range input {
 		if i < 4 {
 			first += let(c)
@@ -39,7 +42,11 @@ func main() {
 	iban.SetString(digits, 10)
 	mod := iban.Mod(&iban, big.NewInt(97)).Int64()
 	if mod != 1 {
-		fmt.Println("IBAN incorrect or input error: ", 98-mod)
+		if check == "00" {
+			fmt.Printf("Generated IBAN with checksum replaced: %s%02d%s\n", prefix, 98-mod, bban)
+		} else {
+			fmt.Println("IBAN incorrect or input error: ", 98-mod)
+		}
 		os.Exit(int(98-mod))
 	}
 	fmt.Println("IBAN probably correct")
